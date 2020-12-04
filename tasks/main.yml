@@ -1,23 +1,29 @@
 ---
+- name: "End play if distribution not suported"
+  meta: end_host
+  when:
+    - ansible_distribution != "Debian"
+    - ansible_distribution != "Ubuntu"
+
 - name: "Check for squid_exporter binary"
   stat:
-    path: "/usr/local/bin/squid_exporter"
+    path: '{{ squid_exporter_install_dir }}/squid-exporter'
   changed_when: false
-  register: squid_exporter_install
+  register: squid_exporter_binary
 
-- when: not squid_exporter_install.stat.exists
+- when: not squid_exporter_binary.stat.exists or squid_exporter_force_install|bool
   block:
     - name: "Download squid_exporter..."
       get_url:
         url: '{{ squid_exporter_url }}'
-        dest: /usr/local/bin/
+        dest: '{{ squid_exporter_install_dir }}'
         timeout: 120
-        mode: 0755
+        mode: '0755'
 
 - name: "Create systemd for squid_exporter"
   template:
-    src: squid_exporter.service
-    dest: /etc/systemd/system/
+    src: 'squid_exporter.service.j2'
+    dest: '/etc/systemd/system/squid_exporter.service'
     mode: '0644'
   notify: "restart squid_exporter"
 
