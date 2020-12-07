@@ -4,6 +4,7 @@
   when:
     - ansible_distribution != "Debian"
     - ansible_distribution != "Ubuntu"
+    - ansible_distribution != "CentOS"
 
 - name: "Check for squid_exporter binary"
   stat:
