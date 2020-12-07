@@ -17,7 +17,7 @@ before_install:
 
 install:
   # Install test dependencies.
-  - pip install molecule yamllint ansible-lint docker molecule-goss
+  - pip install molecule yamllint ansible-lint docker molecule-goss molecule-docker
 
 before_script:
   # To use the role without the ansible github flag
