@@ -6,7 +6,7 @@ alerta_force_install: false
 
 alerta_auth_required: True
 alerta_secretkey: 'DUEJ6_9T5j9bQ1a)8++%=n45h4#xmO=Q'
-alerta_admin_users: 
+alerta_admin_users:
   - test@exemple.net
 alerta_allowed_email_domains:
   - exemple.net
@@ -100,4 +100,4 @@ alerta_keycloak_options: |
   KEYCLOAK_REALM = 'master'
   OAUTH2_CLIENT_ID = 'alerta'
   OAUTH2_CLIENT_SECRET = 'a227958d-e07a-4177-a11d-62152c11c84c'
-  ALLOWED_KEYCLOAK_ROLES = ['*'] 
+  ALLOWED_KEYCLOAK_ROLES = ['*']

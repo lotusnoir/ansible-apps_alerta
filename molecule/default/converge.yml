@@ -13,4 +13,4 @@
     - role: geerlingguy.nginx
     - role: geerlingguy.pip
     - role: geerlingguy.git
-    - role: apps_squid_exporter
+    - role: apps_alerta
