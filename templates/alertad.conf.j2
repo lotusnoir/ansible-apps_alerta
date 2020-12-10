@@ -1,0 +1,23 @@
+{{ ansible_managed | comment }}
+
+BASE_URL = '/api'
+
+AUTH_REQUIRED = {{ alerta_auth_required }}
+SECRET_KEY = '{{ alerta_secretkey }}'
+ADMIN_USERS = {{ alerta_admin_users }}
+ALLOWED_EMAIL_DOMAINS = {{ alerta_allowed_email_domains }}
+ALLOWED_ENVIRONMENTS = {{ alerta_allowed_environments }}
+
+{{ alerta_severity_options }}
+
+{{ alerta_color_options }}
+
+{{ alerta_extra_conf_options }}
+
+{% if alerta_ldap_enable | bool %}
+{{ alerta_ldap_options }}
+{% endif %}
+
+{% if alerta_keycloak_enable | bool %}
+{{ alerta_keycloak_options }}
+{% endif %}

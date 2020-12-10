@@ -1,5 +1,6 @@
 ---
-- name: "restart squid_exporter"
+- name: restart alerta
   service:
-    name: "squid_exporter"
-    state: "restarted"
+    name: alerta
+    state: restarted
+    daemon_reload: yes

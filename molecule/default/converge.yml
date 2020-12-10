@@ -10,4 +10,7 @@
       changed_when: false
 
   roles:
+    - role: geerlingguy.nginx
+    - role: geerlingguy.pip
+    - role: geerlingguy.git
     - role: apps_squid_exporter

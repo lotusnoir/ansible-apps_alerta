@@ -1,12 +1,103 @@
 ---
-# Binary install
-squid_exporter_version:       "1.9.2"
-squid_exporter_url:           "https://github.com/boynux/squid-exporter/releases/download/v{{ squid_exporter_version }}/squid-exporter"
-squid_exporter_install_dir:   "/usr/local/bin"
-squid_exporter_force_install: false
+alerta_tgz: "alerta-webui.tar.gz"
+alerta_tgz_url: "https://github.com/alerta/alerta-webui/releases/latest/download/{{ alerta_tgz }}"
+alerta_install_dir: "/opt/alerta"
+alerta_force_install: false
 
-# Systemd options
-squid_exporter_squid_host:    "localhost"
-squid_exporter_squid_port:    "3128"
-squid_exporter_listen_port:   "9103"
-squid_exporter_extra_flags:   "-extractservicetimes=false"
+alerta_auth_required: True
+alerta_secretkey: 'DUEJ6_9T5j9bQ1a)8++%=n45h4#xmO=Q'
+alerta_admin_users: 
+  - test@exemple.net
+alerta_allowed_email_domains:
+  - exemple.net
+alerta_allowed_environments:
+  - Production
+  - Preproduction
+  - Sandbox
+  - Integration
+  - Develop
+  - Test
+alerta_plugins_list:
+  - plugins/amqp
+  - plugins/enhance
+  - plugins/forward
+  - plugins/geoip
+  - plugins/influxdb
+  - plugins/logstash
+  - plugins/mattermost
+  - plugins/normalise
+  - plugins/prometheus
+  - plugins/pushover
+  - plugins/slack
+  - plugins/syslog
+  - plugins/telegram
+  - integrations/mailer
+  - integrations/urlmon
+
+alerta_enabled_plugins: []
+alerta_severity_options: |
+  SEVERITY_MAP = {
+      'critical': 1,
+      'major': 2,
+      'minor': 3,
+      'warning': 4,
+      'informational': 5,
+      'debug': 6,
+      'trace': 7,
+      'indeterminate': 8,
+      'cleared': 9,
+      'normal': 9,
+      'ok': 9,
+      'unknown':10
+  }
+  DEFAULT_NORMAL_SEVERITY = 'ok'
+  DEFAULT_PREVIOUS_SEVERITY = 'indeterminate'
+
+alerta_color_options: |
+  COLOR_MAP = {
+    'severity': {
+        'critical': 'red',
+        'major': 'orange',
+        'minor': 'yellow',
+        'warning': 'yellow',
+        'informational': 'green',
+        'debug': 'purple',
+        'trace': 'grey',
+        'indeterminate': 'silver',
+        'cleared': 'green',
+        'normal': 'green',
+        'ok': 'green',
+        'unknown': 'grey'
+    }
+  }
+
+alerta_extra_conf_options: |
+  DATABASE_URL = 'postgresql://alerta:alertapgsqlpass@10.11.12.13:5432/alerta'
+  DATABASE_NAME = 'alerta'
+  DEBUG = False
+  ASI_QUERIES = [
+      {'text': 'ALL', 'query': {'q': 'customer:*'}},
+      {'text': 'System', 'query': {'q': 'customer:System'}},
+      {'text': 'Network', 'query': {'q': 'customer:Network'}},
+      {'text': 'SI', 'query': {'q': 'customer:SI'}},
+  ]
+
+alerta_ldap_enable: false
+alerta_ldap_options: |
+  AUTH_PROVIDER = 'ldap'
+  LDAP_URL = 'ldap://ldap.exemple.net:389'
+  LDAP_DOMAINS = {
+      'kosc-telecom.fr': 'uid=%s,cn=users,cn=accounts,dc=exemple,dc=net'
+  }
+  LDAP_DOMAINS_BASEDN = {
+      'exemple.net': 'cn=accounts,dc=exemple,dc=net'
+  }
+
+alerta_keycloak_enable: true
+alerta_keycloak_options: |
+  AUTH_PROVIDER = 'keycloak'
+  KEYCLOAK_URL = 'https://keycloak.exemple.net'
+  KEYCLOAK_REALM = 'master'
+  OAUTH2_CLIENT_ID = 'alerta'
+  OAUTH2_CLIENT_SECRET = 'a227958d-e07a-4177-a11d-62152c11c84c'
+  ALLOWED_KEYCLOAK_ROLES = ['*'] 
