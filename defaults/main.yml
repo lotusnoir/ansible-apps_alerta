@@ -87,7 +87,7 @@ alerta_ldap_options: |
   AUTH_PROVIDER = 'ldap'
   LDAP_URL = 'ldap://ldap.exemple.net:389'
   LDAP_DOMAINS = {
-      'kosc-telecom.fr': 'uid=%s,cn=users,cn=accounts,dc=exemple,dc=net'
+      'exemple.net': 'uid=%s,cn=users,cn=accounts,dc=exemple,dc=net'
   }
   LDAP_DOMAINS_BASEDN = {
       'exemple.net': 'cn=accounts,dc=exemple,dc=net'
