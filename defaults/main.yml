@@ -4,6 +4,7 @@ alerta_tgz_url: "https://github.com/alerta/alerta-webui/releases/latest/download
 alerta_install_dir: "/opt/alerta"
 alerta_force_install: false
 
+#https://docs.alerta.io/en/latest/configuration.html
 alerta_auth_required: True
 alerta_secretkey: 'DUEJ6_9T5j9bQ1a)8++%=n45h4#xmO=Q'
 alerta_admin_users:
@@ -81,6 +82,8 @@ alerta_extra_conf_options: |
       {'text': 'Network', 'query': {'q': 'customer:Network'}},
       {'text': 'SI', 'query': {'q': 'customer:SI'}},
   ]
+  COLUMNS = ['severity', 'status', 'lastReceiveTime', 'duplicateCount',
+           'customer', 'environment', 'service', 'resource', 'event', 'value', 'text']
 
 alerta_ldap_enable: false
 alerta_ldap_options: |
