@@ -105,14 +105,14 @@
     src: 'config.json'
     dest: '/var/www/html/config.json'
     mode: '0644'
-  notify: restart alerta
+  notify: restart nginx
 
 - name: "Copy wsgi.py"
   copy:
     src: 'wsgi.py'
     dest: '/var/www/wsgi.py'
     mode: '0644'
-  notify: restart alerta
+  notify: restart nginx
 
 - name: "Copy /etc/uwsgi.ini"
   template:

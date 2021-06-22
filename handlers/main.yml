@@ -4,3 +4,8 @@
     name: alerta
     state: restarted
     daemon_reload: yes
+
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted

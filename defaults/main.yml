@@ -1,6 +1,7 @@
 ---
 alerta_tgz: "alerta-webui.tar.gz"
-alerta_tgz_url: "https://github.com/alerta/alerta-webui/releases/latest/download/{{ alerta_tgz }}"
+alerta_webgui_version: "8.3.3"
+alerta_tgz_url: "https://github.com/alerta/alerta-webui/releases/download/v{{ alerta_webgui_version }}/{{ alerta_tgz }}"
 alerta_install_dir: "/opt/alerta"
 alerta_force_install: false
 
