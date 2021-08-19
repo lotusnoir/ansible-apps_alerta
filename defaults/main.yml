@@ -6,7 +6,7 @@ alerta_install_dir: "/opt/alerta"
 alerta_force_install: false
 
 #https://docs.alerta.io/en/latest/configuration.html
-alerta_auth_required: True
+alerta_auth_required: "True"
 alerta_secretkey: 'DUEJ6_9T5j9bQ1a)8++%=n45h4#xmO=Q'
 alerta_admin_users:
   - test@exemple.net

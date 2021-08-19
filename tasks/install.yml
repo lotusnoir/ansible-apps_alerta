@@ -1,0 +1,151 @@
+---
+- name: Check for alerta installation
+  stat:
+    path: "{{ alerta_install_dir }}/bin/alerta"
+  changed_when: false
+  register: alerta_install
+
+- when: not alerta_install.stat.exists or alerta_force_install|bool
+  block:
+    - name: Install Alerta requirements
+      package:
+        name: '{{ item }}'
+        state: present
+      with_items:
+        - "{{ alerta_pkg_required }}"
+
+    - name: Create installation directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+      with_items:
+        - "{{ alerta_install_dir }}"
+        - "{{ alerta_install_dir }}/app"
+
+    - name: Install alerta packages
+      pip:
+        name:
+          - pip
+          - wheel
+          - alerta-server
+          - alerta
+          - uwsgi
+          - psycopg2
+        virtualenv: "{{ alerta_install_dir }}"
+        virtualenv_python: "{{ python_version }}"
+      register: binary_install
+
+    - name: Install alerta plugins
+      pip:
+        name: 'git+https://github.com/alerta/alerta-contrib.git#subdirectory={{ item }}'
+        virtualenv: "{{ alerta_install_dir }}"
+        virtualenv_python: "{{ python_version }}"
+      with_items:
+        - "{{ alerta_plugins_list }}"
+
+    - name: Install requiered packages to build python-ldap
+      apt:
+        name: '{{ item }}'
+        state: present
+      with_items:
+        - "{{ alerta_pkg_ldap }}"
+      when: alerta_ldap_enable
+
+    - name: Install ldap support for Alerta
+      pip:
+        name:
+          - python-ldap
+        virtualenv: "{{ alerta_install_dir }}"
+        virtualenv_python: "{{ python_version }}"
+      when: alerta_ldap_enable | bool
+
+    - name: Download Alerta webui
+      get_url:
+        url: '{{ alerta_tgz_url }}'
+        dest: '/tmp/{{ alerta_tgz }}'
+        mode: '0644'
+
+    - name: Remove directory
+      file:
+        path: "/var/www/html"
+        state: absent
+
+    - name: Creates directory
+      file:
+        path: "/var/www/html"
+        state: directory
+        owner: www-data
+        group: www-data
+        mode: 0755
+
+    - name: Unarchive Alerta webui...
+      unarchive:
+        src: '/tmp/{{ alerta_tgz }}'
+        dest: '/var/www/html'
+        remote_src: true
+        extra_opts: [--strip-components=1]
+        owner: www-data
+        group: www-data
+
+    - name: Remove directory
+      file:
+        path: "/tmp/{{ alerta_tgz }}"
+        state: absent
+
+- name: Copy config.json
+  copy:
+    src: 'config.json'
+    dest: '/var/www/html/config.json'
+    mode: '0644'
+    owner: www-data
+    group: www-data
+  notify: restart nginx
+
+- name: Copy wsgi.py
+  copy:
+    src: 'wsgi.py'
+    dest: '/var/www/wsgi.py'
+    mode: '0644'
+    owner: www-data
+    group: www-data
+  notify: restart nginx
+
+- name: Copy /etc/uwsgi.ini
+  template:
+    src: 'uwsgi.ini.j2'
+    dest: '/etc/uwsgi.ini'
+    mode: '0644'
+  notify: restart alerta
+
+- name: Copy /etc/alertad.conf
+  template:
+    src: 'alertad.conf.j2'
+    dest: '/etc/alertad.conf'
+    mode: '0644'
+  notify: restart alerta
+
+- name: Create systemd init
+  template:
+    src: 'alerta.service.j2'
+    dest: '/etc/systemd/system/alerta.service'
+    mode: '0640'
+  notify: restart alerta
+
+- name: Enable and Start and enable Alerta
+  service:
+    name: alerta
+    state: started
+    enabled: true
+
+# - name: Init user passwd
+#   shell: alertad user --all --password alerta || true
+#   tags: key
+#
+# - name: Init admin keys
+#   shell: alertad key --all
+#   tags: key
+#
+# - name: Create api key
+#   shell: alertad key --username philippe --key key
+#   tags: key

@@ -1,161 +1,25 @@
 ---
-- name: "Check for alerta installation"
-  stat:
-    path: "{{ alerta_install_dir }}/bin/alerta"
-  changed_when: false
-  register: alerta_install
+### Checks
+- name: Import check tasks
+  import_tasks: check.yml
 
-- when: not alerta_install.stat.exists or alerta_force_install|bool
-  block:
-    - name: "Install Alerta requierements"
-      apt:
-        name: '{{ item }}'
-        state: present
-      with_items:
-        - python3
-        - python3-setuptools
-        - python3-pip
-        - python3-dev
-        - python3-venv
-        - nginx
-        - uwsgi-plugin-python3
-        - virtualenv
-        - libpq-dev
+- debug:
+    msg: "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
 
-    - name: "Create installation directories"
-      file:
-        path: "{{ item }}"
-        state: directory
-        mode: '0755'
-      with_items:
-        - "{{ alerta_install_dir }}"
-        - "{{ alerta_install_dir }}/app"
+### Include
+- name: Gather OS specific variables
+  include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "{{ ansible_os_family }}-{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
+        - "{{ ansible_os_family }}-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+        - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+      paths:
+        - vars
 
-    - name: "Install alerta packages"
-      pip:
-        name:
-          - pip
-          - wheel
-          - alerta-server
-          - alerta
-          - uwsgi
-          - psycopg2
-        virtualenv: "{{ alerta_install_dir }}"
-        virtualenv_python: python3.7
-      register: binary_install
-
-    - name: "Install alerta plugins"
-      pip:
-        name: 'git+https://github.com/alerta/alerta-contrib.git#subdirectory={{ item }}'
-        virtualenv: "{{ alerta_install_dir }}"
-        virtualenv_python: python3.7
-      with_items:
-        - "{{ alerta_plugins_list }}"
-
-    - name: "Install requiered packages to build python-ldap"
-      apt:
-        name: '{{ item }}'
-        state: present
-      with_items:
-        - libsasl2-dev
-        - python-dev
-        - libldap2-dev
-        - libssl-dev
-      when: alerta_ldap_enable | bool
-
-    - name: "Install ldap support for Alerta"
-      pip:
-        name:
-          - python-ldap
-        virtualenv: "{{ alerta_install_dir }}"
-        virtualenv_python: python3.7
-      when: alerta_ldap_enable | bool
-
-    - name: "Download Alerta webui"
-      get_url:
-        url: '{{ alerta_tgz_url }}'
-        dest: '/tmp/{{ alerta_tgz }}'
-        mode: '0644'
-
-    - name: Remove directory
-      file:
-        path: "/var/www/html"
-        state: absent
-    
-    - name: Creates directory
-      file:
-        path: "/var/www/html"
-        state: directory
-        owner: www-data
-        group: www-data
-
-    - name: "Unarchive Alerta webui..."
-      unarchive:
-        src: '/tmp/{{ alerta_tgz }}'
-        dest: '/var/www/html'
-        remote_src: true
-        extra_opts: [--strip-components=1]
-        owner: www-data
-        group: www-data
-
-    - name: Remove directory
-      file:
-        path: "/tmp/{{ alerta_tgz }}"
-        state: absent
-
-- name: "Copy config.json"
-  copy:
-    src: 'config.json'
-    dest: '/var/www/html/config.json'
-    mode: '0644'
-    owner: www-data
-    group: www-data
-  notify: restart nginx
-
-- name: "Copy wsgi.py"
-  copy:
-    src: 'wsgi.py'
-    dest: '/var/www/wsgi.py'
-    mode: '0644'
-    owner: www-data
-    group: www-data
-  notify: restart nginx
-
-- name: "Copy /etc/uwsgi.ini"
-  template:
-    src: 'uwsgi.ini.j2'
-    dest: '/etc/uwsgi.ini'
-    mode: '0644'
-  notify: restart alerta
-
-- name: "Copy /etc/alertad.conf"
-  template:
-    src: 'alertad.conf.j2'
-    dest: '/etc/alertad.conf'
-    mode: '0644'
-  notify: restart alerta
-
-- name: "Create systemd init"
-  template:
-    src: 'alerta.service.j2'
-    dest: '/etc/systemd/system/alerta.service'
-    mode: '0640'
-  notify: restart alerta
-
-- name: "Enable and Start and enable Alerta"
-  service:
-    name: alerta
-    state: started
-    enabled: yes
-
-#- name: Init user passwd
-#  shell: alertad user --all --password alerta || true
-#  tags: key
-#
-#- name: Init admin keys
-#  shell: alertad key --all
-#  tags: key
-#
-#- name: Create api key
-#  shell: alertad key --username philippe --key key
-#  tags: key
+### Install
+- name: Import install tasks
+  import_tasks: install.yml
