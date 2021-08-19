@@ -2,17 +2,9 @@
 file:
   /var/www/html/config.json:
     exists: true
-    mode: "0640"
-    owner: www-data
-    group: www-data
+    mode: "0644"
 
 service:
   alerta:
     enabled: true
     running: true
-
-port:
-  tcp:80:
-    listening: true
-    ip:
-      - '0.0.0.0'
