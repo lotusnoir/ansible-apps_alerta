@@ -4,7 +4,7 @@
   become: true
 
   roles:
-    #- role: geerlingguy.git
-    #- role: geerlingguy.pip
-    #- role: geerlingguy.nginx
+    - role: geerlingguy.git
+    - role: geerlingguy.pip
+    - role: geerlingguy.nginx
     - role: apps_alerta
