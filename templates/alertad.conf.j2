@@ -6,6 +6,7 @@ AUTH_REQUIRED = {{ alerta_auth_required }}
 SECRET_KEY = '{{ alerta_secretkey }}'
 ADMIN_USERS = {{ alerta_admin_users }}
 ALLOWED_EMAIL_DOMAINS = {{ alerta_allowed_email_domains }}
+CORS_ALLOW_HEADERS = ['X-Request-Id', 'Content-Type', 'Authorization','Access-Control-Allow-Origin']
 {% if alerta_allowed_environments | length > 0 %}
 ALLOWED_ENVIRONMENTS = {{ alerta_allowed_environments }}
 {% endif %}   
