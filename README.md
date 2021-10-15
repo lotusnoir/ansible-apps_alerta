@@ -1,19 +1,14 @@
-# Ansible Role: ansible-apps_alerta
+# ansible-apps_alerta
 
 ## Description
 
-
-[![Build Status](https://travis-ci.com/lotusnoir/ansible-apps_alerta.svg?branch=master?style=flat)](https://travis-ci.com/lotusnoir/ansible-apps_alerta)
-[![License](https://img.shields.io/badge/license-Apache--2.0-brightgreen?style=flat)](https://opensource.org/licenses/Apache-2.0)
-[![Ansible Role](https://img.shields.io/badge/galaxy-apps_alerta-purple?style=flat)](https://galaxy.ansible.com/lotusnoir/apps_alerta)
+[![Galaxy Role](https://img.shields.io/badge/galaxy-apps_alerta-purple?style=flat)](https://galaxy.ansible.com/lotusnoir/apps_alerta)
+[![Version](https://img.shields.io/github/release/lotusnoir/ansible-apps_alerta.svg)](https://github.com/lotusnoir/ansible-apps_alerta/releases/latest)
 ![GitHub repo size](https://img.shields.io/github/repo-size/lotusnoir/ansible-apps_alerta?color=orange&style=flat)
-![Ansible Quality Score](https://img.shields.io/ansible/quality/52300)
 [![downloads](https://img.shields.io/ansible/role/d/52300)](https://galaxy.ansible.com/lotusnoir/apps_alerta)
-[![Version](https://img.shields.io/github/release/lotusnoir/ansible-apps_alerta.svg)](https://github.com/lotusnoir/ansible-apps_alerta/releases/)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=lotusnoir_ansible-apps_alerta&metric=alert_status)](https://sonarcloud.io/dashboard?id=lotusnoir_ansible-apps_alerta)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=lotusnoir_ansible-apps_alerta&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=lotusnoir_ansible-apps_alerta)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=lotusnoir_ansible-apps_alerta&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=lotusnoir_ansible-apps_alerta)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=lotusnoir_ansible-apps_alerta&metric=security_rating)](https://sonarcloud.io/dashboard?id=lotusnoir_ansible-apps_alerta)
+![Ansible Quality Score](https://img.shields.io/ansible/quality/52300)
+[![License](https://img.shields.io/badge/license-Apache--2.0-brightgreen?style=flat)](https://opensource.org/licenses/Apache-2.0)
+
 
 Deploy [alerta](https://docs.alerta.io/en/latest/) a monitoring web interface.
 
