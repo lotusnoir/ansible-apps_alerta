@@ -25,13 +25,7 @@
 
     - name: Install alerta packages
       pip:
-        name:
-          - pip
-          - wheel
-          - alerta-server
-          - alerta
-          - uwsgi
-          - psycopg2
+        name: "{{ alerta_pkg }}"
         virtualenv: "{{ alerta_install_dir }}"
         virtualenv_python: "{{ python_version }}"
       register: binary_install

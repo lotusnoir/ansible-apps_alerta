@@ -9,51 +9,32 @@
 ![Ansible Quality Score](https://img.shields.io/ansible/quality/56088)
 [![License](https://img.shields.io/badge/license-Apache--2.0-brightgreen?style=flat)](https://opensource.org/licenses/Apache-2.0)
 
-
 Deploy [alerta](https://docs.alerta.io/en/latest/) a monitoring web interface.
 
-## Requierements
+## Requirements
 
 This role doest not install the following requierements:
   - nginx
   - pip
   - git
 
+
 ## Role variables
 
-| Name                           | Default Value | Description                        |
-| -------------------------      | ------------- | -----------------------------------|
-| `alerta_install_dir`           | /opt/alerta | directory to install binary |
-| `alerta_force_install`         | false       | force install variable |
-| `alerta_auth_required`         | true        |  |
-| `alerta_secretkey`             |  |  |
-| `alerta_admin_users`           |  |  |
-| `alerta_allowed_email_domains` |  |  |
-| `alerta_allowed_environments`  |  |  |
-| `alerta_plugins_list`          |  |  |
-| `alerta_enabled_plugins`       |  |  |
-| `alerta_severity_options`      | |  |
-| `alerta_color_options`         | |  |
-| `alerta_extra_conf_options`    | |  |
-| `alerta_ldap_enable`           | |  |
-| `alerta_ldap_options`          | |  |
-| `alerta_keycloak_enable`       | |  |
-| `alerta_keycloak_options`      | |  |
+See [variables](/defaults/main.yml) for more details.
 
 ## Examples
 
-	---
-	- hosts: apps_alerta
-	  become: yes
-	  become_method: sudo
-	  gather_facts: yes
-	  roles:
-	    - role: ansible-apps_alerta
-	  environment: 
-	    http_proxy: "{{ http_proxy }}"
-	    https_proxy: "{{ https_proxy }}"
-	    no_proxy: "{{ no_proxy }}
+        ---
+        - hosts: apps_alerta
+          become: true
+          become_method: sudo
+          gather_facts: true
+          roles:
+            - role: ansible-apps_alerta
+
 
 ## License
 
 This project is licensed under Apache License. See [LICENSE](/LICENSE) for more details.
+

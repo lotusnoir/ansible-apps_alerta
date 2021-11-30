@@ -2,9 +2,7 @@
 - name: Run role
   hosts: all
   become: true
+  any_errors_fatal: true
 
   roles:
-    - role: geerlingguy.git
-    - role: geerlingguy.pip
-    - role: geerlingguy.nginx
-    - role: apps_alerta
+    - role: ansible-apps_alerta
