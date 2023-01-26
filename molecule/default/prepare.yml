@@ -12,3 +12,26 @@
     - role: geerlingguy.git
     - role: geerlingguy.pip
     - role: geerlingguy.nginx
+  vars:
+    alerta_force_install: true
+    nginx_remove_default_vhost: true
+    nginx_vhosts:
+      - server_name: "localhost"
+        listen: "80"
+        extra_parameters: |
+          client_max_body_size 20M;
+          client_body_buffer_size 20M;
+          location /api { try_files $uri @api; }
+          location @api {
+              include uwsgi_params;
+              uwsgi_pass unix:/tmp/uwsgi.sock;
+              proxy_set_header Host $host:$server_port;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              # Avoid IOError when a client closes the connection.
+              uwsgi_ignore_client_abort on;
+          }
+          location / {
+              root /var/www/html;
+              try_files $uri $uri/ /index.html;
+          }

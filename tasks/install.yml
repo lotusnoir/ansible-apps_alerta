@@ -1,21 +1,22 @@
 ---
 - name: Check for alerta installation
-  stat:
+  ansible.builtin.stat:
     path: "{{ alerta_install_dir }}/bin/alerta"
   changed_when: false
   register: alerta_install
 
-- when: not alerta_install.stat.exists or alerta_force_install|bool
+- name: Install tasks
+  when: not alerta_install.stat.exists or alerta_force_install|bool
   block:
     - name: Install Alerta requirements
-      package:
+      ansible.builtin.package:
         name: '{{ item }}'
         state: present
       with_items:
         - "{{ alerta_pkg_required }}"
 
     - name: Create installation directories
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         state: directory
         mode: '0755'
@@ -24,14 +25,14 @@
         - "{{ alerta_install_dir }}/app"
 
     - name: Install alerta packages
-      pip:
+      ansible.builtin.pip:
         name: "{{ alerta_pkg }}"
         virtualenv: "{{ alerta_install_dir }}"
         virtualenv_python: "{{ python_version }}"
       register: binary_install
 
     - name: Install alerta plugins
-      pip:
+      ansible.builtin.pip:
         name: 'git+https://github.com/alerta/alerta-contrib.git#subdirectory={{ item }}'
         virtualenv: "{{ alerta_install_dir }}"
         virtualenv_python: "{{ python_version }}"
@@ -39,7 +40,7 @@
         - "{{ alerta_plugins_list }}"
 
     - name: Install requiered packages to build python-ldap
-      package:
+      ansible.builtin.package:
         name: '{{ item }}'
         state: present
       with_items:
@@ -47,7 +48,7 @@
       when: alerta_ldap_enable
 
     - name: Install ldap support for Alerta
-      pip:
+      ansible.builtin.pip:
         name:
           - python-ldap
         virtualenv: "{{ alerta_install_dir }}"
@@ -55,18 +56,18 @@
       when: alerta_ldap_enable | bool
 
     - name: Download Alerta webui
-      get_url:
+      ansible.builtin.get_url:
         url: '{{ alerta_tgz_url }}'
         dest: '/tmp/{{ alerta_tgz }}'
         mode: '0644'
 
     - name: Remove directory
-      file:
+      ansible.builtin.file:
         path: "/var/www/html"
         state: absent
 
     - name: Creates directory
-      file:
+      ansible.builtin.file:
         path: "/var/www/html"
         state: directory
         owner: www-data
@@ -74,7 +75,7 @@
         mode: 0755
 
     - name: Unarchive Alerta webui...
-      unarchive:
+      ansible.builtin.unarchive:
         src: '/tmp/{{ alerta_tgz }}'
         dest: '/var/www/html'
         remote_src: true
@@ -83,12 +84,12 @@
         group: www-data
 
     - name: Remove directory
-      file:
+      ansible.builtin.file:
         path: "/tmp/{{ alerta_tgz }}"
         state: absent
 
 - name: Copy config.json
-  copy:
+  ansible.builtin.copy:
     src: 'config.json'
     dest: '/var/www/html/config.json'
     mode: '0644'
@@ -97,7 +98,7 @@
   notify: restart nginx
 
 - name: Copy wsgi.py
-  copy:
+  ansible.builtin.copy:
     src: 'wsgi.py'
     dest: '/var/www/wsgi.py'
     mode: '0644'
@@ -106,28 +107,28 @@
   notify: restart nginx
 
 - name: Copy /etc/uwsgi.ini
-  template:
+  ansible.builtin.template:
     src: 'uwsgi.ini.j2'
     dest: '/etc/uwsgi.ini'
     mode: '0644'
   notify: restart alerta
 
 - name: Copy /etc/alertad.conf
-  template:
+  ansible.builtin.template:
     src: 'alertad.conf.j2'
     dest: '/etc/alertad.conf'
     mode: '0644'
   notify: restart alerta
 
 - name: Create systemd init
-  template:
+  ansible.builtin.template:
     src: 'alerta.service.j2'
     dest: '/etc/systemd/system/alerta.service'
     mode: '0644'
   notify: restart alerta
 
-- name: Enable and Start and enable Alerta
-  service:
+- name: Enable and Start Alerta
+  ansible.builtin.service:
     name: alerta
     state: started
     enabled: true
