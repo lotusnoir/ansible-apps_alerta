@@ -13,11 +13,11 @@ galaxy_info:
         - "bionic"
     - name: "Debian"
       versions:
-        - "bullseye"
         - "buster"
-    - name: "RedHat"
+        - "bullseye"
+    - name: "OracleLinux"
       versions:
-        - "Maipo"
+        - "9"
 
   galaxy_tags:
     - alerta
