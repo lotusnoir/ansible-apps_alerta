@@ -95,7 +95,7 @@
     mode: '0644'
     owner: www-data
     group: www-data
-  notify: restart nginx
+  notify: Restart nginx
 
 - name: Copy wsgi.py
   ansible.builtin.copy:
@@ -111,7 +111,7 @@
     src: 'uwsgi.ini.j2'
     dest: '/etc/uwsgi.ini'
     mode: '0644'
-  notify: restart alerta
+  notify: Restart alerta
 
 - name: Copy /etc/alertad.conf
   ansible.builtin.template:
@@ -125,7 +125,7 @@
     src: 'alerta.service.j2'
     dest: '/etc/systemd/system/alerta.service'
     mode: '0644'
-  notify: restart alerta
+  notify: Restart alerta
 
 - name: Enable and Start Alerta
   ansible.builtin.service:

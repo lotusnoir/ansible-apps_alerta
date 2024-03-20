@@ -1,11 +1,11 @@
 ---
-- name: restart alerta
+- name: Restart alerta
   ansible.builtin.service:
     name: alerta
     state: restarted
     daemon_reload: true
 
-- name: restart nginx
+- name: Restart nginx
   ansible.builtin.service:
     name: nginx
     state: restarted
