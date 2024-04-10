@@ -24,7 +24,11 @@
 Deploy [alerta](https://docs.alerta.io/en/latest/) a monitoring web interface.
 ## Requirements
 
-none
+This role doest not install the following requierements:
+  - nginx
+  - pip
+  - git
+
 
 ## Role variables
 
