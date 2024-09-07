@@ -12,6 +12,10 @@
       ansible.builtin.package:
         name: '{{ item }}'
         state: present
+      register: pkg_result
+      retries: 12
+      delay: 10
+      until: pkg_result is success
       with_items:
         - "{{ alerta_pkg_required }}"
 
@@ -43,6 +47,10 @@
       ansible.builtin.package:
         name: '{{ item }}'
         state: present
+      register: pkg_result
+      retries: 12
+      delay: 10
+      until: pkg_result is success
       with_items:
         - "{{ alerta_pkg_ldap }}"
       when: alerta_ldap_enable
@@ -72,7 +80,7 @@
         state: directory
         owner: www-data
         group: www-data
-        mode: 0755
+        mode: '0755'
 
     - name: Unarchive Alerta webui...
       ansible.builtin.unarchive:
